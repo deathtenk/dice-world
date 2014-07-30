@@ -9,7 +9,7 @@ public class Cell : Automaton {
 
 	void Start () {
 		auto = GameObject.FindGameObjectWithTag("automaton");
-		transform.parent = auto.transform;
+		// transform.parent = auto.transform;
 		//a = transform.parent.GetComponent<Automaton>();
 		int stateRoll = Random.Range(0, 100);
 		if (stateRoll <= 35)
