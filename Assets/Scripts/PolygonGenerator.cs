@@ -7,13 +7,15 @@ public class PolygonGenerator : MonoBehaviour {
 	public List<Vector3> newVertices = new List<Vector3>();
 	public List<int> newTriangles = new List<int>();
 	public List<Vector2> newUV = new List<Vector2>();
+	public bool update=false;
 
 	public byte[,] blocks;
 
 	private Mesh mesh;
 
-	private float tUnit = 1f;
-	private Vector2 tRed = new Vector2(0, 0);
+	private float tUnit = 0.5f;
+	private Vector2 tStone = new Vector2(0, 0);
+	private Vector2 tRed = new Vector2(0, 1);
 
 	private int squareCount;
 
@@ -22,6 +24,14 @@ public class PolygonGenerator : MonoBehaviour {
 	private int colCount;
 
 	private MeshCollider col;
+
+	void Update() {
+		if (update) {
+			BuildMesh();
+			UpdateMesh();
+			update=false;
+		}
+	}
 
 	void Start ()
 	{
@@ -84,7 +94,7 @@ public class PolygonGenerator : MonoBehaviour {
 		colVertices.Add( new Vector3 (x + 1, y  , 1));
 		colVertices.Add( new Vector3 (x + 1 , y - 1  , 1));
 		colVertices.Add( new Vector3 (x + 1 , y - 1  , 0 ));
-		colVertices.Add( new Vector3 (x  , y  , 0 ));
+		colVertices.Add( new Vector3 (x + 1  , y  , 0 ));
 
 		ColliderTriangles();
 		
@@ -150,14 +160,40 @@ public class PolygonGenerator : MonoBehaviour {
 	}
 
 	void GenTerrain() {
-		blocks = new byte[10, 10];
+		blocks = new byte[96, 128];
 		for (int px=0; px<blocks.GetLength (0); px++)
 		{
+			int stone = Noise (px,0,80,15,1);
+			stone+=Noise (px,0,50,30,1);
+			stone+=Noise (px,0,10,10,1);
+			stone+=75;
+
+			int red = Noise(px, 0, 100f,35,1);
+			red+= Noise (px,100,50,30,1);
+			red+=75;
+
 			for (int py = 0; py<blocks.GetLength (1); py++)
 			{
-								blocks [px, py] = 1;
+				if (py<stone) {
+					blocks [px, py] = 1; //for stone spawning
+
+					if(Noise (px,py,12,16,1)> 10) {
+						blocks[px, py] = 2; //dirt spawn
+					}
+
+					if(Noise(px,py*2, 16, 14, 1) > 10) {
+						blocks[px, py] = 0; // cave spawn
+					}
+				}
+				else if (py<red) {
+						blocks[px,py] = 2;
+					}
 			}
 		}
+	}
+
+	int Noise(int x, int y, float scale, float mag, float exp) {
+		return (int) (Mathf.Pow ((Mathf.PerlinNoise(x/scale, y/scale)*mag), (exp) ));
 	}
 
 	void BuildMesh()
@@ -168,6 +204,10 @@ public class PolygonGenerator : MonoBehaviour {
 				{
 					GenCollider(px,py);
 					if(blocks[px,py] == 1) 
+					{
+						GenSquare(px,py,tStone);
+					}
+					else if (blocks[px, py] == 2)
 					{
 						GenSquare(px,py,tRed);
 					}
