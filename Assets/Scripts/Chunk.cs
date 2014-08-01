@@ -25,6 +25,17 @@ public class Chunk : MonoBehaviour
 	public int chunkY;
 	public int chunkZ;
 
+  public bool update;
+
+  void LateUpdate()
+  {
+    if(update)
+    {
+      GenerateMesh ();
+      update=false;
+    }
+  }
+
 	void Start()
 	{
 		mesh = GetComponent<MeshFilter>().mesh;
@@ -43,7 +54,7 @@ public class Chunk : MonoBehaviour
 		return world.Block(x+chunkX,y+chunkY,z+chunkZ);
 	}
 
-	void GenerateMesh()
+	public void GenerateMesh()
 	{
 		for (int x = 0; x < chunkSize; x++) {
 			for(int y = 0; y < chunkSize; y++){
