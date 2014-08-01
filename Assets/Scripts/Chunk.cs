@@ -19,20 +19,70 @@ public class Chunk : MonoBehaviour
 	public GameObject worldGO;
 	private World world;
 
+	public int chunkSize = 16;
+
+	public int chunkX;
+	public int chunkY;
+	public int chunkZ;
+
 	void Start()
 	{
 		mesh = GetComponent<MeshFilter>().mesh;
 		col = GetComponent<MeshCollider>();
-		CubeTop(0,0,0,0);
-		CubeNorth(0,0,0,0);
-		CubeEast (0,0,0,0);
-		CubeSouth(0,0,0,0);
-		CubeWest (0,0,0,0);
-		CubeBot(0,0,0,0);
+		//CubeTop(0,0,0,0);
+		//CubeNorth(0,0,0,0);
+		//CubeEast (0,0,0,0);
+		//CubeSouth(0,0,0,0);
+		//CubeWest (0,0,0,0);
+		//CubeBot(0,0,0,0);
 		world = worldGO.GetComponent("World") as World;
 
-		UpdateMesh();
+		GenerateMesh ();
 	}
+
+	byte Block(int x, int y, int z){
+		return world.Block(x+chunkX,y+chunkY,z+chunkZ);
+	}
+
+	void GenerateMesh()
+	{
+		for (int x = 0; x < chunkSize; x++) {
+			for(int y = 0; y < chunkSize; y++){
+				for(int z = 0; z < chunkSize; z++)
+					//This code will run for every block in the chunk
+				{
+					if(Block(x,y,z)!=0) {
+						if(Block(x,y+1,z)==0){
+							//block is above the air
+							CubeTop (x,y,z,Block(x,y,z));
+						}
+						if(Block (x,y-1,z)==0){
+							//Block is below the air
+							CubeBot (x,y,z,Block(x,y,z));
+						}
+						if(Block (x+1,y,z)==0){
+							//Block east is air
+							CubeEast (x,y,z,Block(x,y,z));
+						}
+						if(Block (x-1,y,z)==0){
+							//Block west is air
+							CubeWest (x,y,z,Block(x,y,z));
+						}
+						if(Block (x,y,z+1)==0){
+							//Block north is air
+							CubeNorth (x,y,z,Block(x,y,z));
+						}
+						if(Block (x,y,z-1)==0){
+							//Block south is air
+							CubeSouth (x,y,z,Block(x,y,z));
+						}
+					}
+				}
+			}
+		}
+		UpdateMesh ();
+	}
+
 
 	void CubeTop(int x, int y, int z, byte block)
 	{
@@ -40,11 +90,14 @@ public class Chunk : MonoBehaviour
 		newVertices.Add(new Vector3 (x + 1, y,  z + 1));
 		newVertices.Add(new Vector3 (x + 1, y,  z ));
 		newVertices.Add(new Vector3 (x,  y,  z ));
+		
+		Vector2 texturePos = new Vector2(0,0);
 
-		
-		Vector2 texturePos;
-		
-		texturePos=tStone;
+		if (Block (x, y, z) == 1) {
+			texturePos = tStone;
+		} else if (Block (x, y, z) == 2) {
+			texturePos = tRed;
+		}
 		
 		Cube (texturePos);
 	}
@@ -56,9 +109,13 @@ public class Chunk : MonoBehaviour
 		newVertices.Add(new Vector3 (x, y, z + 1));
 		newVertices.Add(new Vector3 (x, y-1, z + 1));
 
-		Vector2 texturePos;
+		Vector2 texturePos = new Vector2(0,0);
 		
-		texturePos=tStone;
+		if (Block (x, y, z) == 1) {
+			texturePos = tStone;
+		} else if (Block (x, y, z) == 2) {
+			texturePos = tRed;
+		}
 		
 		Cube (texturePos);
 	}
@@ -71,9 +128,13 @@ public class Chunk : MonoBehaviour
 		newVertices.Add(new Vector3 (x + 1, y - 1, z + 1));
 
 		
-		Vector2 texturePos;
+		Vector2 texturePos = new Vector2(0,0);
 		
-		texturePos=tStone;
+		if (Block (x, y, z) == 1) {
+			texturePos = tStone;
+		} else if (Block (x, y, z) == 2) {
+			texturePos = tRed;
+		}
 		
 		Cube (texturePos);
 	}
@@ -86,9 +147,13 @@ public class Chunk : MonoBehaviour
 		newVertices.Add(new Vector3 (x + 1, y - 1, z));
 
 		
-		Vector2 texturePos;
+		Vector2 texturePos = new Vector2(0,0);
 		
-		texturePos=tStone;
+		if (Block (x, y, z) == 1) {
+			texturePos = tStone;
+		} else if (Block (x, y, z) == 2) {
+			texturePos = tRed;
+		}
 		
 		Cube (texturePos);
 	}
@@ -100,9 +165,13 @@ public class Chunk : MonoBehaviour
 		newVertices.Add(new Vector3 (x, y, z));
 		newVertices.Add(new Vector3 (x, y - 1, z));
 
-		Vector2 texturePos;
+		Vector2 texturePos = new Vector2(0,0);
 		
-		texturePos=tStone;
+		if (Block (x, y, z) == 1) {
+			texturePos = tStone;
+		} else if (Block (x, y, z) == 2) {
+			texturePos = tRed;
+		}
 		
 		Cube (texturePos);
 	}
@@ -114,9 +183,13 @@ public class Chunk : MonoBehaviour
 		newVertices.Add(new Vector3 (x + 1, y-1,  z + 1));
 		newVertices.Add(new Vector3 (x,  y-1,  z + 1));
 		
-		Vector2 texturePos;
+		Vector2 texturePos = new Vector2(0,0);
 		
-		texturePos=tStone;
+		if (Block (x, y, z) == 1) {
+			texturePos = tStone;
+		} else if (Block (x, y, z) == 2) {
+			texturePos = tRed;
+		}
 		
 		Cube (texturePos);
 	}
@@ -148,8 +221,8 @@ public class Chunk : MonoBehaviour
 		mesh.Optimize ();
 		mesh.RecalculateNormals ();
 		
-		//col.sharedMesh=null;
-		//col.sharedMesh=mesh;
+		col.sharedMesh=null;
+		col.sharedMesh=mesh;
 		
 		newVertices.Clear();
 		newUV.Clear();
