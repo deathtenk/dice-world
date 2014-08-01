@@ -29,14 +29,13 @@ public class Chunk : MonoBehaviour
 	{
 		mesh = GetComponent<MeshFilter>().mesh;
 		col = GetComponent<MeshCollider>();
+    world = worldGO.GetComponent("World") as World;
 		//CubeTop(0,0,0,0);
 		//CubeNorth(0,0,0,0);
 		//CubeEast (0,0,0,0);
 		//CubeSouth(0,0,0,0);
 		//CubeWest (0,0,0,0);
 		//CubeBot(0,0,0,0);
-		world = worldGO.GetComponent("World") as World;
-
 		GenerateMesh ();
 	}
 
@@ -50,8 +49,8 @@ public class Chunk : MonoBehaviour
 			for(int y = 0; y < chunkSize; y++){
 				for(int z = 0; z < chunkSize; z++)
 					//This code will run for every block in the chunk
-				{
-					if(Block(x,y,z)!=0) {
+				{		
+          if(Block(x,y,z)!=0) {
 						if(Block(x,y+1,z)==0){
 							//block is above the air
 							CubeTop (x,y,z,Block(x,y,z));
@@ -209,7 +208,7 @@ public class Chunk : MonoBehaviour
 		newUV.Add(new Vector2 (tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
 		newUV.Add(new Vector2 (tUnit * texturePos.x, tUnit * texturePos.y));
 		
-		faceCount++; // Add this line
+		faceCount++;
 	}
 
 	void UpdateMesh()
