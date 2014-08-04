@@ -115,15 +115,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: e493019d110a1e441b1745f55fceee5c, type: 2}
       propertyPath: worldX
-      value: 128
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: e493019d110a1e441b1745f55fceee5c, type: 2}
       propertyPath: worldY
-      value: 128
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: e493019d110a1e441b1745f55fceee5c, type: 2}
       propertyPath: worldZ
-      value: 128
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e493019d110a1e441b1745f55fceee5c, type: 2}
@@ -507,6 +507,14 @@ Prefab:
       propertyPath: movement.maxAirAcceleration
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 9d4133d5d30b644bd87802a347eaccbe, type: 2}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 14300000, guid: 9d4133d5d30b644bd87802a347eaccbe, type: 2}
+      propertyPath: m_Radius
+      value: .400000006
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9d4133d5d30b644bd87802a347eaccbe, type: 2}
   m_RootGameObject: {fileID: 1726132280}
@@ -541,9 +549,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d741ac1a7d48647d982a7878d9ded1cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldX: 128
-  worldY: 128
-  worldZ: 128
+  worldX: 512
+  worldY: 32
+  worldZ: 512
   chunkSize: 16
   chunk: {fileID: 100000, guid: f71111e9ca2b6a146ac8ccfee704ea63, type: 2}
 --- !u!4 &1696623996
@@ -569,6 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0335c2e94ae4aa8ba27e1f7073e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadTimer: 1
 --- !u!1 &1726132280
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,7 +592,7 @@ GameObject:
   - 114: {fileID: 1726132281}
   m_Layer: 0
   m_Name: First Person Controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

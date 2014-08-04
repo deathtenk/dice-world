@@ -35,9 +35,12 @@ public class World : MonoBehaviour {
 			}
 		}
 
+    Debug.Log(new Vector3 (Mathf.FloorToInt(worldX/chunkSize),Mathf.FloorToInt(worldY/chunkSize),Mathf.FloorToInt(worldZ/chunkSize)));
+
+    // Gives size of the 3 dimensional array for each one of my chunk objects
 		chunks=new Chunk[Mathf.FloorToInt(worldX/chunkSize),Mathf.FloorToInt(worldY/chunkSize),Mathf.FloorToInt(worldZ/chunkSize)];
 
-		for (int x=0; x<chunks.GetLength(0); x++){
+		/*for (int x=0; x<chunks.GetLength(0); x++){
 			for (int y=0; y<chunks.GetLength(1); y++){
 				for (int z=0; z<chunks.GetLength(2); z++){
 	      GameObject newChunk = Instantiate(chunk,
@@ -53,8 +56,37 @@ public class World : MonoBehaviour {
       
         }
       }
-    }	
+    }*/	
 	}
+
+
+
+  public void GenColumn (int x, int z) {
+    // chunks
+  for (int y=0; y<chunks.GetLength(1); y++){
+    GameObject newChunk = Instantiate(chunk,
+                                      new Vector3(x*chunkSize - 0.5f,y*chunkSize + 0.5f,z*chunkSize - 0.5f),
+                                      new Quaternion(0,0,0,0)) as GameObject;
+          
+    chunks[x,y,z] = newChunk.GetComponent<Chunk>();
+    chunks[x,y,z].worldGO=gameObject;
+    chunks[x,y,z].chunkSize=chunkSize;
+    chunks[x,y,z].chunkX=x*chunkSize;
+    chunks[x,y,z].chunkY=y*chunkSize;
+    chunks[x,y,z].chunkZ=z*chunkSize;
+          
+    }
+  }
+
+  public void GenColumnToXML(int x, int z) {
+  }
+
+  public void UnloadColumn(int x, int z) {
+    for (int y = 0; y<chunks.GetLength(1); y++)
+    {
+      Object.Destroy (chunks [x,y,z].gameObject);
+    }
+  }
 
 	public byte Block(int x, int y, int z)
 	{
@@ -62,7 +94,7 @@ public class World : MonoBehaviour {
 		{
 			return (byte) 0;
 		}
-		return data [x, y, z];
+		return data[x, y, z];
 	}
 
 	int PerlinNoise(int x, int y, int z, float scale, float height, float power)

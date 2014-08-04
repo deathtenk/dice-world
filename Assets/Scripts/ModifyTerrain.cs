@@ -5,6 +5,8 @@ public class ModifyTerrain : MonoBehaviour {
 
   World world;
   GameObject cameraGO;
+  public double loadTimer = 1.0f;
+  private double curTimer = 0.0f;
 
   public void Start()
   {
@@ -18,6 +20,35 @@ public class ModifyTerrain : MonoBehaviour {
       ReplaceBlockCursor (0);
     if(Input.GetMouseButtonDown(1))
       AddBlockCursor (1);
+
+    curTimer -= Time.deltaTime;
+    if (curTimer <= 0.0f) {
+      LoadChunks(GameObject.FindGameObjectWithTag("MainCamera").transform.position,48,64);
+      curTimer = loadTimer;
+    }
+  }
+
+  public void LoadChunks(Vector3 playerPos, float distToLoad, float distToUnload)
+  {
+    for(int x=0; x<world.chunks.GetLength(0);x++)
+    {
+      for(int z=0; z<world.chunks.GetLength(2);z++)
+      {
+        float dist=Vector2.Distance(new Vector2(x*world.chunkSize, z*world.chunkSize), 
+                                    new Vector2(playerPos.x,playerPos.y));
+
+        if(dist<distToLoad){
+          if(world.chunks[x,0,z]==null){
+            world.GenColumn(x,z);
+          }
+        } 
+        else if(dist>distToUnload){
+          if(world.chunks[x,0,z]!=null){
+            world.UnloadColumn(x,z);
+          }
+        }
+      }
+    }
   }
 
 	public void ReplaceBlockCenter(float range, byte block){
@@ -100,7 +131,7 @@ public class ModifyTerrain : MonoBehaviour {
 
   public void SetBlockAt(int x, int y, int z, byte block) {
     //adds the specified block at these coordinates
-    print ("Adding: " + x + ", " + y + ", " + z);
+    //print ("Adding: " + x + ", " + y + ", " + z);
 
     world.data[x,y,z]=block;
     UpdateChunkAt(x,y,z);
@@ -112,7 +143,7 @@ public class ModifyTerrain : MonoBehaviour {
     int updateY = Mathf.FloorToInt ( y/world.chunkSize);
     int updateZ = Mathf.FloorToInt ( z/world.chunkSize);
 
-    print ("Updating: " + updateX + ", " + updateY + ", " + updateZ);
+    //print ("Updating: " + updateX + ", " + updateY + ", " + updateZ);
     world.chunks[updateX,updateY, updateZ].update=true;
     if(x-(world.chunkSize*updateX)==0 && updateX!=0){
       world.chunks[updateX-1,updateY, updateZ].update=true;

@@ -47,7 +47,8 @@ public class Chunk : MonoBehaviour
 		//CubeSouth(0,0,0,0);
 		//CubeWest (0,0,0,0);
 		//CubeBot(0,0,0,0);
-		GenerateMesh ();
+		GenerateMesh ();    
+    // Debug.Log(transform.position);
 	}
 
 	byte Block(int x, int y, int z){
@@ -240,4 +241,6 @@ public class Chunk : MonoBehaviour
 		
 		faceCount=0;
 	}
+
+
 }
